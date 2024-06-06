@@ -1,85 +1,85 @@
-// creacion de la clase producto
-class Producto {
-    constructor(nombre, precio, cantidad) {
-      this.nombre = nombre;
-      this.precio = precio;
-      this.cantidad = cantidad;
-    }
-  }
-  
-  let inventario = [];
-  
-  //creacion de la funcion para agregar el producto al inventario
-  function agregarProducto() {
-    let precio;
-    let nombre = prompt("Ingrese el nombre del producto:");
-    do{
-        precio = parseFloat(prompt("Ingrese el precio del producto:"));
-    }
-    while(isNaN(precio) || precio === "" || precio === null){
-    };
+function agregarProducto(event) {
+event.preventDefault(); // Para evitar que no se resetee lo ingresado en la Lista
 
-    let cantidad = parseInt(prompt("Ingrese la cantidad del producto:"));
-    let producto = new Producto(nombre, precio, cantidad);
-    inventario.push(producto);
-    console.log("Producto agregado al inventario:");
-    console.log(producto);
-  }
-  
-  //creacion de la funcion para actualizar la cantidad del producto
-  function actualizarCantidad() {
-    let nombre = prompt("Ingrese el nombre del producto a actualizar:");
-    let nuevaCantidad = parseInt(prompt("Ingrese la nueva cantidad del producto:"));
-    let producto = inventario.find(item => item.nombre === nombre);
-    if (producto) {
-      producto.cantidad = nuevaCantidad;
-      alert("Stock actualizado para el producto: "+nombre);
-    } else {
-      alert("El producto " + nombre + " no se encontró en el inventario.");
-    }
-  }
+  var nuevoProductoInput = document.getElementById("nuevoProducto");
+  var nuevoPrecioInput = document.getElementById("nuevoPrecio");
+  var nuevoStockInput = document.getElementById("nuevoStock");
 
-  // creacion de la funcion para actualizar el precio del producto
-  function actualizarPrecio() {
-    let nombre = prompt("Ingrese el nombre del producto a actualizar:");
-    let nuevoPrecio = parseFloat(prompt("Ingrese el nuevo precio del producto:"));
-    let producto = inventario.find(item => item.nombre === nombre);
-    if (producto) {
-      producto.precio = nuevoPrecio;
-      alert("Precio actualizado para el producto: "+nombre);
-    } else {
-      alert("El producto " + nombre + " no se encontró en el inventario.");
-    }
-  }
-  
-  //creacion del menu
-  function mostrarMenu() {
-    let opcion;
-    do {
-      opcion = prompt("Seleccione una opción: \n1. Agregar producto\n2. Actualizar cantidad\n3. Actualizar precio \n4. Salir");
-      switch (opcion) {
-        case "1":
-          agregarProducto();
-          break;
-        case "2":
-          actualizarCantidad();
-          break;
-        case "3":
-          actualizarPrecio();
-          break;
-        case "4":
-          mostrarProductos();
-          break;
-      }
-    } while (opcion !== "4");
-  }
+  var nuevoProductoValor = nuevoProductoInput.value.trim();
+  var nuevoPrecioValor = nuevoPrecioInput.value.trim();
+  var nuevoStockValor = nuevoStockInput.value.trim();
 
-  // cree una funcion para mostrar los productos cuando finalizamos el programa, a diferencia de lo que muestra en consola cuando agrego un producto, ahora muestra el producto despues de haber actualizado el stock y el precio
-  function mostrarProductos() {
-    console.log("Productos en el inventario:");
-    inventario.forEach(producto => {
-      console.log("Nombre: " +producto.nombre+" Precio: $"+producto.precio+  " Cantidad: "+producto.cantidad);
-    });
-  }
+  if (nuevoProductoValor !== "" && nuevoPrecioValor !== "" && nuevoStockValor !== "") {
+      var lista = document.getElementById("lista");
+      var nuevoItemLista = document.createElement("li");
 
-  mostrarMenu();
+      // Crear un texto con el nombre, precio y stock del Producto
+      nuevoItemLista.textContent = nuevoProductoValor + " -   Precio: $" + nuevoPrecioValor + ",   Stock: " + nuevoStockValor;
+
+      lista.appendChild(nuevoItemLista); // Agregar el nuevo Producto a la lista
+
+      // Obtener los Productos guardados en el LocalStorage
+      var ProductosGuardados = JSON.parse(localStorage.getItem("Productos")) || []; 
+      ProductosGuardados.push({ nombre: nuevoProductoValor, precio: nuevoPrecioValor, stock: nuevoStockValor });
+      localStorage.setItem("Productos", JSON.stringify(ProductosGuardados));
+
+      // Reseteo de los inputs
+      nuevoProductoInput.value = "";
+      nuevoPrecioInput.value = "";
+      nuevoStockInput.value = "";
+      nuevoProductoInput.focus();
+  } else {
+      alert("Por favor, complete todos los campos.");
+  }
+}
+// Creacion de la lista
+var lista = document.createElement("ul");
+lista.id = "lista";
+
+// Creacion de el formulario
+var formulario = document.createElement("form");
+formulario.id = "formulario";
+formulario.addEventListener("submit", agregarProducto); // Asignar la función agregarProducto al evento submit del formulario
+
+// Creacion de input y label para agregar el nombre del producto
+var inputNuevoProducto = document.createElement("input");
+inputNuevoProducto.type = "text";
+inputNuevoProducto.id = "nuevoProducto";
+inputNuevoProducto.name = "nuevoProducto";
+var labelNuevoProducto = document.createElement("label");
+labelNuevoProducto.textContent = "Nuevo Producto: ";
+labelNuevoProducto.setAttribute("for", "nuevoProducto");
+formulario.appendChild(labelNuevoProducto);
+formulario.appendChild(inputNuevoProducto);
+
+//Creacion de input y label para agregar un Precio
+var inputNuevoPrecio = document.createElement("input");
+inputNuevoPrecio.type = "text";
+inputNuevoPrecio.id = "nuevoPrecio";
+inputNuevoPrecio.name = "nuevoPrecio";
+var labelNuevoPrecio = document.createElement("label");
+labelNuevoPrecio.textContent = " Precio: ";
+labelNuevoPrecio.setAttribute("for", "nuevoPrecio");
+formulario.appendChild(labelNuevoPrecio);
+formulario.appendChild(inputNuevoPrecio);
+
+//Creacion de input y label para agregar el stock del producto
+var inputNuevoStock = document.createElement("input");
+inputNuevoStock.type = "text";
+inputNuevoStock.id = "nuevoStock";
+inputNuevoStock.name = "nuevoStock";
+var labelNuevoStock = document.createElement("label");
+labelNuevoStock.textContent = " Stock: ";
+labelNuevoStock.setAttribute("for", "nuevoStock");
+formulario.appendChild(labelNuevoStock);
+formulario.appendChild(inputNuevoStock);
+
+// Creacion del boton 
+var botonAgregar = document.createElement("button");
+botonAgregar.type = "submit";
+botonAgregar.textContent = "Agregar";
+formulario.appendChild(botonAgregar);
+
+// Agrego el formulario y por debajo la lista al Body
+document.body.appendChild(formulario);
+document.body.appendChild(lista);
