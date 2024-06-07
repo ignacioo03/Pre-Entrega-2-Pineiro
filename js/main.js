@@ -1,9 +1,10 @@
 function agregarProducto(event) {
-event.preventDefault(); // Para evitar que no se resetee lo ingresado en la Lista
+  event.preventDefault(); // Para evitar que no se resetee lo ingresado en la Lista
 
   var nuevoProductoInput = document.getElementById("nuevoProducto");
   var nuevoPrecioInput = document.getElementById("nuevoPrecio");
   var nuevoStockInput = document.getElementById("nuevoStock");
+  var mensajeError = document.getElementById("mensajeError");
 
   var nuevoProductoValor = nuevoProductoInput.value.trim();
   var nuevoPrecioValor = nuevoPrecioInput.value.trim();
@@ -28,10 +29,16 @@ event.preventDefault(); // Para evitar que no se resetee lo ingresado en la List
       nuevoPrecioInput.value = "";
       nuevoStockInput.value = "";
       nuevoProductoInput.focus();
+
+      // Ocultar el mensaje de error
+      mensajeError.style.display = "none";
   } else {
-      alert("Por favor, complete todos los campos.");
+      // Mostrar el mensaje de error
+      mensajeError.textContent = "Por favor, complete todos los campos.";
+      mensajeError.style.display = "block";
   }
 }
+
 // Creacion de la lista
 var lista = document.createElement("ul");
 lista.id = "lista";
@@ -79,6 +86,13 @@ var botonAgregar = document.createElement("button");
 botonAgregar.type = "submit";
 botonAgregar.textContent = "Agregar";
 formulario.appendChild(botonAgregar);
+
+// Creacion del mensaje de error
+var mensajeError = document.createElement("p");
+mensajeError.id = "mensajeError";
+mensajeError.style.color = "red";
+mensajeError.style.display = "none";
+document.body.appendChild(mensajeError);
 
 // Agrego el formulario y por debajo la lista al Body
 document.body.appendChild(formulario);
